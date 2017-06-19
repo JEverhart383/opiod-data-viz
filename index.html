@@ -37,7 +37,7 @@
 			.attr('width', width)
 			.attr('height', height); 
 
-		d3.json('us-test.json', function(error, data){
+		d3.json('combined-data.json', function(error, data){
 			if (error) throw error; 
 			
 			svg.selectAll('path')
@@ -45,7 +45,9 @@
 				.enter().append('path')
 				.attr('d', path)
 				.attr('class', 'counties')
-				.on
+				.on('mouseover', function(d){
+					console.log(d); 
+				})
 
 			svg.append('path')
 				.attr('class', 'county-borders')
