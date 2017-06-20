@@ -29,6 +29,8 @@ with open('2015-death-data.csv', 'rb') as datafile:
 		state = states_dict[line['State']]
 		# create a new property on state with num deaths 
 		state['deaths2015'] = line['Number'].replace(',', '')
+		# create a new prop on state with age adjusted death rate
+		state['rate2015'] = line['Rate']
 
 
 # repeat same deal here as above
@@ -36,8 +38,12 @@ with open('2013-2014-death-data.csv', 'rb') as datafile:
 	reader = csv.DictReader(datafile)
 	for line in reader: 
 		state = states_dict[line['State']]
+		# add props for total number of deaths 
 		state['deaths2013'] = line['2013Number'].replace(',', '')
-		state['deaths2014'] = line['2014Number'].replace(',', '')	
+		state['deaths2014'] = line['2014Number'].replace(',', '')
+		# add props for age adjusted number of deaths 
+		state['rate2013'] = line['2013Rate']
+		state['rate2014'] = line['2014Rate']	
 
 # add in population data
 with open('population-data.csv', 'rb') as pop_data:

@@ -26,25 +26,47 @@
 	</style>
 </head>
 <body>
-<input type="range" name="range" value="2015" min="2013" max="2015">
+<div>Year: <span id="selectedYear"></span></div>
+<input type="range" name="range" id="yearInput" value="2015" min="2013" max="2015">
+<input type="radio" name="dataFilters" value="totalDeaths" checked> Total Deaths
+<input type="radio" name="dataFilters" value="deathsPer100k"> Deaths Per 100K Residents
+<input type="radio" name="dataFilters" value="ageAdjustedDeaths"> Age Adjusted Death Rate
+
 	<script type="text/javascript">
 		var width = 960, 
 			height = 600; 
 
 		var projection = d3.geoAlbersUsa(); 
 		var path = d3.geoPath(); 
-
+		var json; 
 		var svg = d3.select('body').append('svg')
 			.attr('width', width)
 			.attr('height', height); 
+		var yearInput = document.querySelector('#yearInput'); 
+		var selectedYear = document.querySelector('#selectedYear'); 
+		selectedYear.innerText = yearInput.value; 
+		yearInput.addEventListener('change', function(){
+			console.log(this.value); 
+			selectedYear.innerText = this.value; 
+			drawMap(json, this.value); 
+		})
 
-		d3.json('combined-data.json', function(error, data){
-			if (error) throw error; 
 
+		function drawMap(data, year){
+			console.log(data); 
+			//hoist this to the global scope
 			var states = data.objects.states.geometries; 
-			var max = d3.max(states, function(d){return parseInt(d['properties']['deaths2013']) / parseInt(d['properties']['population2013']) }); 
+			
+			var max = d3.max(states, function(d){
+				return ( (d['properties']['deaths' + year] / d['properties']['population' + year]) * 100000 )
+
+			}); 
 			console.log(max)
-			var min = d3.min(states, function(d){return parseInt(d['properties']['deaths2013']) / parseInt(d['properties']['population2013']) }); 
+			
+			var min = d3.min(states, function(d){
+				return ( (d['properties']['deaths' + year] / d['properties']['population' + year]) * 100000 ) 
+			
+			}); 
 			console.log(min)
 			var colorScale = d3.scaleLinear().domain([min, max]).range(['#edf8b1','#7fcdbb','#2c7fb8']); 
 			
@@ -53,20 +75,23 @@
 				.enter().append('path')
 				.attr('d', path)
 				.style('fill', function(d){
-					return colorScale(+d['properties']['deaths2013'] / parseInt(d['properties']['population2013'])); 
+					return colorScale( ((d['properties']['deaths' + year] / d['properties']['population' + year]) * 100000 ) ) ; 
 				})
-				.on('mouseover', function(d){
-					console.log(d); 
-				})
+				// .on('mouseover', function(d){
+				// 	console.log(d); 
+				// })
 
 			svg.append('path')
 				.attr('class', 'county-borders')
-				.attr('d', path(topojson.mesh(data, data.objects.states, function(a,b){return a!== b}))); 
-			// svg.append('path')
-			// 	.attr('class', 'states')
-			// 	.datum({type: "FeatureCollection", features: "features"})
-			// 	.attr('d', path(data)); 
-			console.log(d3.selectAll('path'))
+				.attr('d', path(topojson.mesh(data, data.objects.states, function(a,b){return a!== b})));
+		}	
+
+		d3.json('combined-data.json', function(error, data){
+			if (error) throw error; 
+			json = data; 
+			drawMap(data, '2015'); 
+
+
 		})			
 
 
