@@ -26,6 +26,7 @@
 	</style>
 </head>
 <body>
+<input type="range" name="range" value="2015" min="2013" max="2015">
 	<script type="text/javascript">
 		var width = 960, 
 			height = 600; 
@@ -39,12 +40,21 @@
 
 		d3.json('combined-data.json', function(error, data){
 			if (error) throw error; 
+
+			var states = data.objects.states.geometries; 
+			var max = d3.max(states, function(d){return parseInt(d['properties']['deaths2013']) / parseInt(d['properties']['population2013']) }); 
+			console.log(max)
+			var min = d3.min(states, function(d){return parseInt(d['properties']['deaths2013']) / parseInt(d['properties']['population2013']) }); 
+			console.log(min)
+			var colorScale = d3.scaleLinear().domain([min, max]).range(['#edf8b1','#7fcdbb','#2c7fb8']); 
 			
 			svg.selectAll('path')
 				.data(topojson.feature(data, data.objects.states).features)
 				.enter().append('path')
 				.attr('d', path)
-				.attr('class', 'counties')
+				.style('fill', function(d){
+					return colorScale(+d['properties']['deaths2013'] / parseInt(d['properties']['population2013'])); 
+				})
 				.on('mouseover', function(d){
 					console.log(d); 
 				})
