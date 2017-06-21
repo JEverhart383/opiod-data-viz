@@ -24,76 +24,41 @@
 		  pointer-events: none;
 		}
 	</style>
+
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-<div>Year: <span id="selectedYear"></span></div>
-<input type="range" name="range" id="yearInput" value="2015" min="2013" max="2015">
-<input type="radio" name="dataFilters" value="totalDeaths" checked> Total Deaths
-<input type="radio" name="dataFilters" value="deathsPer100k"> Deaths Per 100K Residents
-<input type="radio" name="dataFilters" value="ageAdjustedDeaths"> Age Adjusted Death Rate
-
-	<script type="text/javascript">
-		var width = 960, 
-			height = 600; 
-
-		var projection = d3.geoAlbersUsa(); 
-		var path = d3.geoPath(); 
-		var json; 
-		var svg = d3.select('body').append('svg')
-			.attr('width', width)
-			.attr('height', height); 
-		var yearInput = document.querySelector('#yearInput'); 
-		var selectedYear = document.querySelector('#selectedYear'); 
-		selectedYear.innerText = yearInput.value; 
-		yearInput.addEventListener('change', function(){
-			console.log(this.value); 
-			selectedYear.innerText = this.value; 
-			drawMap(json, this.value); 
-		})
-
-
-		function drawMap(data, year){
-			console.log(data); 
-			//hoist this to the global scope
-			var states = data.objects.states.geometries; 
+<div class="container">
+	<div class="row">
+		<h1>Deaths by Drug Overdose 2013-2015</h1>
+		<p>To create this data set, I had to compile data from a few different sources, mainly the CDC and the Census Bureau. Below you will find some links to the original data sources and a few other resources that talk about how statistics like these are calculated for geographic areas.</p>
+		<div class="col-lg-4">
+		<h3>Year Slider</h3>
+			<div>Current Year: <span id="selectedYear"></span></div>
+			<input type="range" name="range" id="yearInput" value="2015" min="2013" max="2015">	
+		</div>
+		<div class="col-lg-4">
+		<h3>Statistical Filters</h3>
+			<input type="radio" name="dataFilters" value="totalDeaths" class="statsFilter" checked> Total Deaths<br>
+			<input type="radio" name="dataFilters" value="deathsPer100k" class="statsFilter"> Deaths Per 100K Residents<br>
+			<input type="radio" name="dataFilters" value="ageAdjustedDeaths" class="statsFilter"> Age Adjusted Death Rate	
+		</div>
+		<div class="col-lg-4">
+		<h3>Color Scale Filters</h3>
+			<input type="radio" name="colorScaleFilters" value="linearScale" class="colorFilter" checked> Linear Scale<br>
+			<input type="radio" name="colorScaleFilters" value="logScale" class="colorFilter"> Logarithmic Scale<br>
+			<input type="radio" name="colorScaleFilters" value="quantileScale" class="colorFilter"> Quantile Scale
+		</div>
+		<div id="map-area">
 			
-			var max = d3.max(states, function(d){
-				return ( (d['properties']['deaths' + year] / d['properties']['population' + year]) * 100000 )
+		</div>
+				
+	</div>
+	
+</div>
 
-			}); 
-			console.log(max)
-			
-			var min = d3.min(states, function(d){
-				return ( (d['properties']['deaths' + year] / d['properties']['population' + year]) * 100000 ) 
-			
-			}); 
-			console.log(min)
-			var colorScale = d3.scaleLinear().domain([min, max]).range(['#edf8b1','#7fcdbb','#2c7fb8']); 
-			
-			svg.selectAll('path')
-				.data(topojson.feature(data, data.objects.states).features)
-				.enter().append('path')
-				.attr('d', path)
-				.style('fill', function(d){
-					return colorScale( ((d['properties']['deaths' + year] / d['properties']['population' + year]) * 100000 ) ) ; 
-				})
-				// .on('mouseover', function(d){
-				// 	console.log(d); 
-				// })
-
-			svg.append('path')
-				.attr('class', 'county-borders')
-				.attr('d', path(topojson.mesh(data, data.objects.states, function(a,b){return a!== b})));
-		}	
-
-		d3.json('combined-data.json', function(error, data){
-			if (error) throw error; 
-			json = data; 
-			drawMap(data, '2015'); 
-
-
-		})			
-
+	<script type="text/javascript" src="app.js">
 
 	</script>
 </body>
