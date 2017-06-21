@@ -1,5 +1,5 @@
 	var width = 960, 
-			height = 600; 
+		height = 600; 
 
 		var projection = d3.geoAlbersUsa(); 
 		var path = d3.geoPath(); 
@@ -115,9 +115,51 @@
 				.enter().append('path')
 				.attr('d', path)
 				.style('fill', colorFunction)
-				// .on('mouseover', function(d){
-				// 	console.log(d); 
-				// })
+				.on('click', function(d){
+					
+					console.log(d); 
+
+					d3.select('#state-name').text(d.properties.State)
+					d3.select('#state-abbvr').text(d.properties.Abbreviation)
+
+					d3.select('#pop2013').text(d.properties.population2013)
+					d3.select('#total2013').text(d.properties.deaths2013)
+					d3.select('#agerate2013').text(d.properties.rate2013)
+					d3.select('#per100K2013').text(
+						Math.round(
+							((d.properties.deaths2013 / d.properties.population2013) * 100000) * 10
+							) / 10
+						)
+
+					d3.select('#pop2014').text(d.properties.population2014)
+					d3.select('#total2014').text(d.properties.deaths2014)
+					d3.select('#agerate2014').text(d.properties.rate2014)
+					d3.select('#per100K2014').text(
+						Math.round(
+							((d.properties.deaths2014 / d.properties.population2014) * 100000) * 10
+							) / 10
+						)
+
+					d3.select('#pop2015').text(d.properties.population2015)
+					d3.select('#total2015').text(d.properties.deaths2015)
+					d3.select('#agerate2015').text(d.properties.rate2015)
+					d3.select('#per100K2015').text(
+						Math.round(
+							((d.properties.deaths2015 / d.properties.population2015) * 100000) * 10
+							) / 10
+						)
+					// var rect = this.getBoundingClientRect(); 
+					// var top = rect.top; 
+					// var right = rect.right; 
+					// var tooltip = d3.select('#tooltip'); 
+					// console.log(tooltip)
+					
+					// tooltip
+					// .style('right', right + 'px')
+					// .style('top', top + 'px'); 
+
+
+				})
 
 			svg.append('path')
 				.attr('class', 'county-borders')

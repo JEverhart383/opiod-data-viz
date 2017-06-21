@@ -23,6 +23,13 @@
 		  stroke-linecap: round;
 		  pointer-events: none;
 		}
+
+		#tooltip{
+			position: fixed;
+			width: 100px;
+			height: 100px;
+			background-color: black; 
+		}
 	</style>
 
 	<!-- Latest compiled and minified CSS -->
@@ -36,20 +43,55 @@
 		<div class="col-lg-4">
 		<h3>Year Slider</h3>
 			<div>Current Year: <span id="selectedYear"></span></div>
-			<input type="range" name="range" id="yearInput" value="2015" min="2013" max="2015">	
+			<input type="range" name="range" id="yearInput" value="2015" min="2013" max="2015">		
 		</div>
 		<div class="col-lg-4">
 		<h3>Statistical Filters</h3>
 			<input type="radio" name="dataFilters" value="totalDeaths" class="statsFilter" checked> Total Deaths<br>
 			<input type="radio" name="dataFilters" value="deathsPer100k" class="statsFilter"> Deaths Per 100K Residents<br>
-			<input type="radio" name="dataFilters" value="ageAdjustedDeaths" class="statsFilter"> Age Adjusted Death Rate	
-		</div>
-		<div class="col-lg-4">
+			<input type="radio" name="dataFilters" value="ageAdjustedDeaths" class="statsFilter"> Age Adjusted Death Rate
 		<h3>Color Scale Filters</h3>
 			<input type="radio" name="colorScaleFilters" value="linearScale" class="colorFilter" checked> Linear Scale<br>
 			<input type="radio" name="colorScaleFilters" value="logScale" class="colorFilter"> Logarithmic Scale<br>
-			<input type="radio" name="colorScaleFilters" value="quantileScale" class="colorFilter"> Quantile Scale
+			<input type="radio" name="colorScaleFilters" value="quantileScale" class="colorFilter"> Quantile Scale	
 		</div>
+		<div class="col-lg-4">
+		<h3>State Details</h3>
+		<h4>Name: <span id="state-name"></span></h4>
+		<h4>Abbreviation: <span id="state-abbvr"></span></h4>
+		<table class="table">
+			<tr>
+				<th>Year</th>
+				<th>Population</th>
+				<th>Total Deaths</th>
+				<th>Rate 100K</th>
+				<th>Age Adjusted Rate</th>
+			</tr>
+			<tr>
+				<th>2013</th>
+				<th id="pop2013"></th>
+				<th id="total2013"></th>
+				<th id="per100K2013"></th>
+				<th id="agerate2013"></th>
+			</tr>
+			<tr>
+				<th>2014</th>
+				<th id="pop2014"></th>
+				<th id="total2014"></th>
+				<th id="per100K2014"></th>
+				<th id="agerate2014"></th>
+			</tr>
+			<tr>
+				<th>2015</th>
+				<th id="pop2015"></th>
+				<th id="total2015"></th>
+				<th id="per100K2015"></th>
+				<th id="agerate2015"></th>
+			</tr>
+		</table>
+		</div>
+		
+
 		<div id="map-area">
 			
 		</div>
@@ -57,6 +99,9 @@
 	</div>
 	
 </div>
+<!-- <div id="tooltip" class="tooltip">
+	<p>Some text in here</p>
+</div> -->
 
 	<script type="text/javascript" src="app.js">
 
